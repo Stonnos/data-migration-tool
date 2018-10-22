@@ -66,7 +66,7 @@ public class MigrationLog {
     /**
      * Detail message
      */
-    @Lob
+    @Column(columnDefinition = "text")
     private String details;
 
     /**
