@@ -65,6 +65,8 @@ public class MigrationService {
             Instances instances = dataLoader.loadInstances();
             log.info("Data has been loaded from file '{}'", migrationData.getDataResource().getFile());
             instancesService.migrateInstances(migrationLog.getTableName(), instances);
+            migrationLog.setNumInstances(instances.numInstances());
+            migrationLog.setNumAttributes(instances.numAttributes());
             migrationLog.setMigrationStatus(MigrationStatus.SUCCESS);
         } catch (Exception ex) {
             migrationLog.setMigrationStatus(MigrationStatus.ERROR);

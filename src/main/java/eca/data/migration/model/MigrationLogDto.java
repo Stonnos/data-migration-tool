@@ -30,6 +30,18 @@ public class MigrationLogDto {
     private String tableName;
 
     /**
+     * Instances number
+     */
+    @ApiModelProperty(notes = "Number of instances (rows in table)")
+    private Integer numInstances;
+
+    /**
+     * Attributes number
+     */
+    @ApiModelProperty(notes = "Number of attributes (columns in table)")
+    private Integer numAttributes;
+
+    /**
      * Migration end date
      */
     @ApiModelProperty(notes = "Migrated date", required = true)

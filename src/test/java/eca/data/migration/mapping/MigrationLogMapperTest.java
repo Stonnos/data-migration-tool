@@ -28,6 +28,8 @@ public class MigrationLogMapperTest {
         MigrationLog migrationLog = TestHelperUtils.createMigrationLog();
         MigrationLogDto migrationLogDto = migrationLogMapper.map(migrationLog);
         Assertions.assertThat(migrationLogDto.getTableName()).isEqualTo(migrationLog.getTableName());
+        Assertions.assertThat(migrationLogDto.getNumInstances()).isEqualTo(migrationLog.getNumInstances());
+        Assertions.assertThat(migrationLogDto.getNumAttributes()).isEqualTo(migrationLog.getNumAttributes());
         Assertions.assertThat(migrationLogDto.getSourceFileName()).isEqualTo(migrationLog.getSourceFileName());
         Assertions.assertThat(migrationLogDto.getFinishDate()).isEqualTo(migrationLog.getFinishDate());
         Assertions.assertThat(migrationLogDto.getMigrationLogSource()).isEqualTo(migrationLog.getMigrationLogSource());

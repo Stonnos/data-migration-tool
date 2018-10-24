@@ -38,6 +38,18 @@ public class MigrationLog {
     private String tableName;
 
     /**
+     * Instances number
+     */
+    @Column(name = "num_instances")
+    private Integer numInstances;
+
+    /**
+     * Attributes number
+     */
+    @Column(name = "num_attributes")
+    private Integer numAttributes;
+
+    /**
      * Migration start date
      */
     @Column(name = "start_date")
