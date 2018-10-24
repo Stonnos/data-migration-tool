@@ -1,12 +1,10 @@
 package eca.data.migration.service;
 
 import eca.data.file.FileDataLoader;
-import eca.data.file.resource.FileResource;
 import eca.data.migration.TestHelperUtils;
 import eca.data.migration.config.MigrationConfig;
 import eca.data.migration.exception.MigrationException;
 import eca.data.migration.model.entity.MigrationLog;
-import eca.data.migration.model.entity.MigrationLogSource;
 import eca.data.migration.model.entity.MigrationStatus;
 import eca.data.migration.repository.MigrationLogRepository;
 import org.assertj.core.api.Assertions;
@@ -28,7 +26,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import weka.core.Instances;
 
 import javax.inject.Inject;
-import java.io.File;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -75,7 +72,7 @@ public class MigrationServiceTest {
         PowerMockito.whenNew(FileDataLoader.class).withNoArguments().thenReturn(dataLoader);
         when(dataLoader.loadInstances()).thenReturn(instances);
         doNothing().when(instancesService).migrateInstances(anyString(), any(Instances.class));
-        migrationService.migrateData(new FileResource(new File(TestHelperUtils.DATA_PATH)), MigrationLogSource.JOB);
+        migrationService.migrateData(TestHelperUtils.createMigrationData());
         MigrationLog migrationLog = migrationLogRepository.findAll().stream().findFirst().orElse(null);
         Assertions.assertThat(migrationLog).isNotNull();
         Assertions.assertThat(migrationLog.getMigrationStatus()).isEqualTo(MigrationStatus.SUCCESS);
@@ -88,6 +85,6 @@ public class MigrationServiceTest {
         FileDataLoader dataLoader = PowerMockito.mock(FileDataLoader.class);
         PowerMockito.whenNew(FileDataLoader.class).withNoArguments().thenReturn(dataLoader);
         when(dataLoader.loadInstances()).thenThrow(new MigrationException("There was as error!"));
-        migrationService.migrateData(new FileResource(new File(TestHelperUtils.DATA_PATH)), MigrationLogSource.JOB);
+        migrationService.migrateData(TestHelperUtils.createMigrationData());
     }
 }

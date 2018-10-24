@@ -1,4 +1,4 @@
-Data migration tool v1.1
+Data migration tool v1.2
 ========================================
 
 Описание
@@ -30,11 +30,11 @@ Data migration tool v1.1
 1) spring.datasource - настройки БД для хранения информации
 2) migration — основные настройки модуля миграции:
    
-   migration.dateFormat - формат даты для атрибутов типа "Дата"
-   migration.dataStoragePath - путь к директории с файлами данных на диске
-   migration.batchSize - размер блока для транзакционного сохранения данных в базу данных
-   migration.durationInSeconds - интервал между запусками scheduler для миграции данных
-   migration.jobEnabled - выключатель для миграции данных с помощью scheduler
+   * migration.dateFormat - формат даты для атрибутов типа "Дата"
+   * migration.dataStoragePath - путь к директории с файлами данных на диске
+   * migration.batchSize - размер блока для транзакционного сохранения данных в базу данных
+   * migration.durationInSeconds - интервал между запусками scheduler для миграции данных
+   * migration.jobEnabled - выключатель для миграции данных с помощью scheduler
 
 Инструкция по развертыванию
 ----------------------------------------
@@ -50,10 +50,13 @@ Data migration tool v1.1
    
 4. Запустить проект из командной строки с помощью команды:
 
-   java -jar data-migration-tool-1.1.jar
+   java -jar data-migration-tool-1.2.jar
   
 5. End point для миграции данных доступен по адресу http://[host]:[port]/migration-tool/migrate. Где host и port -
    адрес хоста и номер порта, на котором развернуто приложение. Ниже приведен пример команды через утилиту curl
    для миграции данных через end point:
    
    curl -i -X POST -H "Content-Type: multipart/form-data" -F "dataFile=@/home/roman/IrisEX.csv" http://localhost:8091/migration-tool/migrate
+
+6. Страница с документацией swagger находится по адресу http://[host]:[port]/swagger-ui.html, где host и port
+   соответственно адрес машины и порт на котором развернуто приложение.

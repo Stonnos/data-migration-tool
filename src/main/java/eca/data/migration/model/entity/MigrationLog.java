@@ -8,7 +8,6 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
 
@@ -37,12 +36,6 @@ public class MigrationLog {
      */
     @Column(name = "table_name")
     private String tableName;
-
-    /**
-     * Last migrated table index
-     */
-    @Column(name = "last_table_index")
-    private long lastTableIndex;
 
     /**
      * Migration start date

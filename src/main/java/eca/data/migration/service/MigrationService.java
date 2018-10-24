@@ -2,19 +2,21 @@ package eca.data.migration.service;
 
 import eca.data.db.SqlQueryHelper;
 import eca.data.file.FileDataLoader;
-import eca.data.file.resource.DataResource;
 import eca.data.migration.config.MigrationConfig;
 import eca.data.migration.exception.MigrationException;
+import eca.data.migration.model.MigrationData;
 import eca.data.migration.model.entity.MigrationLog;
-import eca.data.migration.model.entity.MigrationLogSource;
 import eca.data.migration.model.entity.MigrationStatus;
 import eca.data.migration.repository.MigrationLogRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import weka.core.Instances;
 
 import javax.inject.Inject;
+import java.text.MessageFormat;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 /**
  * Service for migration data file into database.
@@ -26,6 +28,7 @@ import java.time.LocalDateTime;
 public class MigrationService {
 
     private static final String TABLE_NAME_FORMAT = "%s_%d";
+    private static final String LIKE_PATTERN = "%{0}%";
 
     private final MigrationConfig config;
     private final InstancesService instancesService;
@@ -50,18 +53,17 @@ public class MigrationService {
     /**
      * Migrates training data file into database.
      *
-     * @param dataResource       - training data resource
-     * @param migrationLogSource - migration log source
+     * @param migrationData - migration data
      */
-    public void migrateData(DataResource dataResource, MigrationLogSource migrationLogSource) {
+    public void migrateData(MigrationData migrationData) {
         FileDataLoader dataLoader = new FileDataLoader();
         dataLoader.setDateFormat(config.getDateFormat());
-        dataLoader.setSource(dataResource);
-        log.info("Starting to migrate file '{}'.", dataResource.getFile());
-        MigrationLog migrationLog = createAndSaveMigrationLog(dataResource, migrationLogSource);
+        dataLoader.setSource(migrationData.getDataResource());
+        log.info("Starting to migrate file '{}'.", migrationData.getDataResource().getFile());
+        MigrationLog migrationLog = createAndSaveMigrationLog(migrationData);
         try {
             Instances instances = dataLoader.loadInstances();
-            log.info("Data has been loaded from file '{}'", dataResource.getFile());
+            log.info("Data has been loaded from file '{}'", migrationData.getDataResource().getFile());
             instancesService.migrateInstances(migrationLog.getTableName(), instances);
             migrationLog.setMigrationStatus(MigrationStatus.SUCCESS);
         } catch (Exception ex) {
@@ -74,17 +76,35 @@ public class MigrationService {
         }
     }
 
-    private synchronized MigrationLog createAndSaveMigrationLog(DataResource dataResource,
-                                                                MigrationLogSource migrationLogSource) {
-        long lastTableIndex = migrationLogRepository.findLastTableIndex();
+    private synchronized MigrationLog createAndSaveMigrationLog(MigrationData migrationData) {
         MigrationLog migrationLog = new MigrationLog();
-        migrationLog.setSourceFileName(dataResource.getFile());
-        migrationLog.setLastTableIndex(lastTableIndex + 1);
-        migrationLog.setTableName(String.format(TABLE_NAME_FORMAT, SqlQueryHelper.normalizeName(dataResource.getFile()),
-                migrationLog.getLastTableIndex()));
+        migrationLog.setSourceFileName(migrationData.getDataResource().getFile());
+        migrationLog.setTableName(getTableName(migrationData));
         migrationLog.setMigrationStatus(MigrationStatus.IN_PROGRESS);
-        migrationLog.setMigrationLogSource(migrationLogSource);
+        migrationLog.setMigrationLogSource(migrationData.getMigrationLogSource());
         migrationLog.setStartDate(LocalDateTime.now());
         return migrationLogRepository.save(migrationLog);
+    }
+
+    /**
+     * Generates table name in case if it isn't specified. A new unique table postfix is generated.
+     *
+     * @param migrationData - migration data
+     * @return generated table name
+     */
+    private String getTableName(MigrationData migrationData) {
+        if (StringUtils.isEmpty(migrationData.getTableName())) {
+            long maxId = migrationLogRepository.findMaxId();
+            String normalizedTableName = SqlQueryHelper.normalizeName(migrationData.getDataResource().getFile());
+            Set<String> tableNames =
+                    migrationLogRepository.findTableNamesLike(MessageFormat.format(LIKE_PATTERN, normalizedTableName));
+            String tableName = String.format(TABLE_NAME_FORMAT, normalizedTableName, ++maxId);
+            while (tableNames.contains(tableName)) {
+                tableName = String.format(TABLE_NAME_FORMAT, normalizedTableName, maxId << 2);
+            }
+            return tableName;
+        } else {
+            return SqlQueryHelper.normalizeName(migrationData.getTableName());
+        }
     }
 }

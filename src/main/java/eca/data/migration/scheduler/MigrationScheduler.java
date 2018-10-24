@@ -3,6 +3,7 @@ package eca.data.migration.scheduler;
 import eca.data.DataFileExtension;
 import eca.data.file.resource.FileResource;
 import eca.data.migration.config.MigrationConfig;
+import eca.data.migration.model.MigrationData;
 import eca.data.migration.model.entity.MigrationLogSource;
 import eca.data.migration.service.MigrationService;
 import lombok.extern.slf4j.Slf4j;
@@ -55,7 +56,10 @@ public class MigrationScheduler {
             log.trace("Fetching {} new data files.", listFiles.size());
             for (File file : listFiles) {
                 try {
-                    migrationService.migrateData(new FileResource(file), MigrationLogSource.JOB);
+                    MigrationData migrationData = new MigrationData();
+                    migrationData.setDataResource(new FileResource(file));
+                    migrationData.setMigrationLogSource(MigrationLogSource.JOB);
+                    migrationService.migrateData(migrationData);
                     FileUtils.forceDelete(file);
                 } catch (Exception ex) {
                     log.error("There was an error while migration file '{}': {}", file.getAbsolutePath(),
