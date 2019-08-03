@@ -11,6 +11,7 @@ import eca.data.migration.repository.MigrationLogRepository;
 import eca.data.migration.service.MigrationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -66,8 +67,9 @@ public class MigrationController {
             notes = "Migrate data file into database"
     )
     @PostMapping(value = "/migrate")
-    public ResponseEntity migrate(@RequestParam MultipartFile dataFile,
-                                  @RequestParam(required = false) String tableName) {
+    public ResponseEntity migrate(
+            @ApiParam(value = "Training data file", required = true) @RequestParam MultipartFile dataFile,
+            @ApiParam(value = "Table name") @RequestParam(required = false) String tableName) {
         try {
             MigrationData migrationData = new MigrationData();
             migrationData.setDataResource(new MultipartFileResource(dataFile));
