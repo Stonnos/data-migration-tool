@@ -1,15 +1,24 @@
 language: java
 jdk: openjdk8
 
+install: true
+addons:
+  sonarcloud:
+    organization: $ORGANIZATION_KEY
+    token:
+      secure: $SONAR_TOKEN
+
 stages:
   - name: test
-
-install: true
+  - name: sonar_analysis
 
 jobs:
   include:
     - stage: test
       script: mvn clean test
+    - stage: sonar_analysis
+      script: mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Psonar -Dsonar.projectKey=$PROJECT_KEY
 cache:
   directories:
     - $HOME/.m2
+    - $HOME/.sonar/cache
