@@ -2,13 +2,12 @@ package eca.data.migration.service;
 
 import eca.data.db.SqlQueryHelper;
 import eca.data.migration.config.MigrationConfig;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weka.core.Instances;
-
-import javax.inject.Inject;
 
 /**
  * Instances migration service.
@@ -17,31 +16,13 @@ import javax.inject.Inject;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class InstancesService {
 
     private final JdbcTemplate jdbcTemplate;
     private final TransactionalService transactionalMigrationService;
     private final MigrationConfig migrationConfig;
     private final SqlQueryHelper sqlQueryHelper;
-
-    /**
-     * Constructor with spring dependency injection.
-     *
-     * @param jdbcTemplate                  - jdbc template bean
-     * @param transactionalMigrationService - transactional migration service bean
-     * @param migrationConfig               - migration config bean
-     * @param sqlQueryHelper                - sql query helper bean
-     */
-    @Inject
-    public InstancesService(JdbcTemplate jdbcTemplate,
-                            TransactionalService transactionalMigrationService,
-                            MigrationConfig migrationConfig,
-                            SqlQueryHelper sqlQueryHelper) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.transactionalMigrationService = transactionalMigrationService;
-        this.migrationConfig = migrationConfig;
-        this.sqlQueryHelper = sqlQueryHelper;
-    }
 
     /**
      * Saves training data into database.

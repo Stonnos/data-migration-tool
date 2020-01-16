@@ -8,12 +8,12 @@ import eca.data.migration.model.MigrationData;
 import eca.data.migration.model.entity.MigrationLog;
 import eca.data.migration.model.entity.MigrationStatus;
 import eca.data.migration.repository.MigrationLogRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import weka.core.Instances;
 
-import javax.inject.Inject;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -25,6 +25,7 @@ import java.util.Set;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class MigrationService {
 
     private static final String TABLE_NAME_FORMAT = "%s_%d";
@@ -33,22 +34,6 @@ public class MigrationService {
     private final MigrationConfig config;
     private final InstancesService instancesService;
     private final MigrationLogRepository migrationLogRepository;
-
-    /**
-     * Constructor with spring dependency injection.
-     *
-     * @param config                 - migration config bean
-     * @param instancesService       - instances service bean
-     * @param migrationLogRepository - migration log repository bean
-     */
-    @Inject
-    public MigrationService(MigrationConfig config,
-                            InstancesService instancesService,
-                            MigrationLogRepository migrationLogRepository) {
-        this.config = config;
-        this.instancesService = instancesService;
-        this.migrationLogRepository = migrationLogRepository;
-    }
 
     /**
      * Migrates training data file into database.

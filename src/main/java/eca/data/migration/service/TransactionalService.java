@@ -1,13 +1,12 @@
 package eca.data.migration.service;
 
 import eca.data.db.SqlQueryHelper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weka.core.Instances;
-
-import javax.inject.Inject;
 
 /**
  * Service for transactional data migration.
@@ -16,22 +15,11 @@ import javax.inject.Inject;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class TransactionalService {
 
     private final JdbcTemplate jdbcTemplate;
     private final SqlQueryHelper sqlQueryHelper;
-
-    /**
-     * Constructor with spring dependency injection.
-     *
-     * @param jdbcTemplate   - jdbc template bean
-     * @param sqlQueryHelper - sql query helper bean
-     */
-    @Inject
-    public TransactionalService(JdbcTemplate jdbcTemplate, SqlQueryHelper sqlQueryHelper) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.sqlQueryHelper = sqlQueryHelper;
-    }
 
     /**
      * Saves training data batch into database.

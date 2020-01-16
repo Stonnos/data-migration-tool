@@ -12,6 +12,7 @@ import eca.data.migration.service.MigrationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.inject.Inject;
 import java.util.Collections;
 import java.util.List;
 
@@ -34,27 +34,12 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/migration-tool")
+@RequiredArgsConstructor
 public class MigrationController {
 
     private final MigrationLogRepository migrationLogRepository;
     private final MigrationService migrationService;
     private final MigrationLogMapper migrationLogMapper;
-
-    /**
-     * Constructor with spring dependency injection.
-     *
-     * @param migrationLogRepository - migration log repository bean
-     * @param migrationService       - migration service bean
-     * @param migrationLogMapper     - migration log mapper bean
-     */
-    @Inject
-    public MigrationController(MigrationLogRepository migrationLogRepository,
-                               MigrationService migrationService,
-                               MigrationLogMapper migrationLogMapper) {
-        this.migrationLogRepository = migrationLogRepository;
-        this.migrationService = migrationService;
-        this.migrationLogMapper = migrationLogMapper;
-    }
 
     /**
      * Migrates training data into database.

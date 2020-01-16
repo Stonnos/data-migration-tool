@@ -1,6 +1,7 @@
 package eca.data.migration.config;
 
 import com.fasterxml.classmate.TypeResolver;
+import eca.data.migration.controller.MigrationController;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +13,6 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import javax.inject.Inject;
 import java.time.LocalDateTime;
 
 import static springfox.documentation.schema.AlternateTypeRules.newRule;
@@ -26,19 +26,16 @@ import static springfox.documentation.schema.AlternateTypeRules.newRule;
 @EnableSwagger2
 public class Swagger2Configuration {
 
-    private static final String CONTROLLER_PACKAGE = "eca.data.migration.controller";
-
     /**
      * Returns swagger configuration bean.
      *
      * @return {@link Docket} bean
      */
     @Bean
-    @Inject
     public Docket docket(TypeResolver typeResolver) {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage(CONTROLLER_PACKAGE))
+                .apis(RequestHandlerSelectors.basePackage(MigrationController.class.getPackage().getName()))
                 .paths(PathSelectors.any())
                 .build()
                 .pathMapping("/")

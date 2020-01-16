@@ -21,7 +21,7 @@ Data migration tool v1.3
 ----------------------------------------
 * jdk 1.8
 * maven >= 3.3.9
-* eca-core 6.5.1
+* eca-core 6.6
 * База данных PostgreSQL для хранения информации.
 
 Описание ключевой конфигурации модуля
@@ -50,7 +50,7 @@ Data migration tool v1.3
    
 4. Запустить проект из командной строки с помощью команды:
 
-   java -jar data-migration-tool-1.2.jar
+   java -jar data-migration-tool-1.3.jar
   
 5. End point для миграции данных доступен по адресу http://[host]:[port]/migration-tool/migrate. Где host и port -
    адрес хоста и номер порта, на котором развернуто приложение. Ниже приведен пример команды через утилиту curl
