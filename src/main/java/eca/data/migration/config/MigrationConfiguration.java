@@ -2,6 +2,7 @@ package eca.data.migration.config;
 
 import eca.data.db.SqlQueryHelper;
 import eca.data.db.SqlTypeUtils;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -13,17 +14,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  */
 @Configuration
 @EnableScheduling
+@EnableConfigurationProperties(MigrationConfig.class)
 public class MigrationConfiguration {
-
-    /**
-     * Creates migration config bean.
-     *
-     * @return migration config bean
-     */
-    @Bean
-    public MigrationConfig migrationConfig() {
-        return new MigrationConfig();
-    }
 
     /**
      * Creates sql query helper bean.
